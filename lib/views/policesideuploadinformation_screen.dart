@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'policesidelast_screen.dart'; // Import the PoliceSideLastScreen
 
 class PoliceSideUploadInformationScreen extends StatefulWidget {
@@ -72,7 +73,7 @@ class _PoliceSideUploadInformationScreenState extends State<PoliceSideUploadInfo
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push( // Navigate to PoliceSideLastScreen with vehicleType
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => PoliceSideLastScreen()),
                     );
@@ -94,8 +95,60 @@ class _PoliceSideUploadInformationScreenState extends State<PoliceSideUploadInfo
   }
 }
 
-class InformationBox extends StatelessWidget {
+class InformationBox extends StatefulWidget {
+  @override
+  _InformationBoxState createState() => _InformationBoxState();
+}
+
+class _InformationBoxState extends State<InformationBox> {
   final TextEditingController _controller = TextEditingController();
+  String? _selectedFile;
+
+  Future<void> _pickFileFromSource(FileType source) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: source);
+
+    if (result != null) {
+      setState(() {
+        _selectedFile = result.files.single.name;
+      });
+    } else {
+      // User canceled the picker
+    }
+  }
+
+  void _showFilePickerMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Wrap(
+        children: [
+          ListTile(
+            leading: Icon(Icons.photo),
+            title: Text('Upload from Gallery'),
+            onTap: () {
+              Navigator.pop(context);
+              _pickFileFromSource(FileType.image);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.camera_alt),
+            title: Text('Upload from Camera'),
+            onTap: () {
+              Navigator.pop(context);
+              // Add logic to handle camera upload
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.file_copy),
+            title: Text('Upload from File Manager'),
+            onTap: () {
+              Navigator.pop(context);
+              _pickFileFromSource(FileType.any);
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,26 +165,9 @@ class InformationBox extends StatelessWidget {
       ),
       child: Row(
         children: [
-          PopupMenuButton(
-            itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-              PopupMenuItem(
-                child: Text('Upload from Gallery'),
-                value: 'gallery',
-              ),
-              PopupMenuItem(
-                child: Text('Upload from Camera'),
-                value: 'camera',
-              ),
-              PopupMenuItem(
-                child: Text('Upload from File Manager'),
-                value: 'file_manager',
-              ),
-            ],
-            onSelected: (value) {
-              // Handle selection
-              print('Selected option: $value');
-            },
+          IconButton(
             icon: Icon(Icons.attach_file),
+            onPressed: () => _showFilePickerMenu(context),
           ),
           SizedBox(width: 10),
           Expanded(
@@ -143,6 +179,14 @@ class InformationBox extends StatelessWidget {
               ),
             ),
           ),
+          if (_selectedFile != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: Text(
+                _selectedFile!,
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
         ],
       ),
     );

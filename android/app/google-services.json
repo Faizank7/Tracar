@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "568570765257",
+    "project_id": "tracar-36f46",
+    "storage_bucket": "tracar-36f46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568570765257:android:9db5d23cc34b0047bc9218",
+        "android_client_info": {
+          "package_name": "com.example.tracar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr6kAYayCTxlJHdh0xzh6xKhBGUiCW0L0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
